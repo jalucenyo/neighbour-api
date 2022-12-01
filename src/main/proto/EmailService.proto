@@ -1,0 +1,19 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package com.lucenyo.notifications.email.infrastructure.grpc;
+
+message EmailRequest {
+  string emailTo = 1;
+  string emailContent = 2;
+}
+
+message EmailResponse {
+  string code = 1;
+  string message = 2;
+}
+
+service EmailService {
+
+  rpc send(EmailRequest) returns (EmailResponse);
+
+}

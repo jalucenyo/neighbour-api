@@ -1,0 +1,17 @@
+logging:
+  level:
+    org.springframework.web: DEBUG
+    com.lucenyo.neighbour: DEBUG
+    net.devh.boot.grpc.client: DEBUG
+    org.springframework.data: DEBUG
+    org.springframework.data.couchbase.repository.query: DEBUG
+
+server:
+  port: 8080
+  servlet:
+    context-path: /@project.artifactId@/api
+
+spring:
+  application:
+    name: /@project.artifactId@/
+

@@ -1,0 +1,42 @@
+logging:
+  level:
+    com.lucenyo.neighbour: DEBUG
+    org.springframework.data: DEBUG
+    org.springframework.data.couchbase.repository.query: DEBUG
+
+server:
+  port: 8080
+  servlet:
+    context-path: /@project.artifactId@/api
+
+spring:
+  application:
+    name: @project.artifactId@
+
+  # Database Configuration
+  datasource:
+    driverClass: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        default_schema: neighbour
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        enable_lazy_load_no_trans: true
+        format_sql: true
+        generate_statistics: true
+        jdbc.lob.non_contextual_creation: true
+        jdbc.time_zone: UTC
+        session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 25
+        show_sql: true
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+  flyway:
+    enabled: false
+    locations: classpath:/db/migration
+    default-schema: neighbour
+    create-schemas: true

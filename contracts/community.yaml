@@ -1,0 +1,262 @@
+openapi: 3.0.3
+info:
+  title: Neighbour Community API
+  description: |-
+    Api managenment communities
+  version: v1
+servers:
+  - url: http://localhost:8080/v1
+tags:
+  - name: Community
+    description: Community API
+paths:
+
+  /community/{id}:
+
+    get:
+      tags:
+        - Community
+      summary: Get community
+      operationId: findById
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Id of the community to get
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityResponse'
+
+    put:
+      tags:
+        - Community
+      summary: Update Community
+      operationId: update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Id of the community to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommunityRequest'
+      responses:
+        '204':
+          description: Successful operation
+
+    delete:
+      tags:
+        - Community
+      summary: Delete community
+      operationId: delete
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: UUID of the community to get
+      responses:
+        '204':
+          description: Successful operation
+
+
+  /community:
+
+    get:
+      tags:
+        - Community
+      summary: Find communities
+      operationId: find
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommunityResponse'
+
+    post:
+      tags:
+        - Community
+      summary: Create Community
+      operationId: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommunityRequest'
+      responses:
+        '201':
+          description: Successful operation
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+                format: url
+
+  /invitations:
+
+    get:
+      tags:
+        - Invite
+      summary: List of invitations
+      operationId: findInvitations
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InviteResponse'
+
+    post:
+      tags:
+        - Invite
+      summary: Create invite add people to community
+      operationId: createInvite
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteRequest'
+      responses:
+        '204':
+          description: Successful operation
+
+  /invitations/{id}:
+
+    put:
+      tags:
+        - Invite
+      summary: Accept or Reject invite people to Community
+      operationId: acceptInvite
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Id of the invitation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteAcceptRequest'
+      responses:
+        '204':
+          description: Successful operation
+
+    delete:
+      tags:
+        - Invite
+      summary: Delete invite
+      operationId: deleteInvite
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: No Content
+
+
+components:
+  schemas:
+
+    CommunityResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        deleted:
+          type: boolean
+        neighbors:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonRoleResponse'
+
+    PersonRoleResponse:
+      type: object
+      properties:
+        personId:
+          type: string
+          format: uuid
+        role:
+          type: string
+
+    CommunityRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          maxLength: 30
+
+    InviteAcceptRequest:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+
+    InviteRequest:
+      type: object
+      required:
+        - communityId
+        - sendTo
+      properties:
+        communityId:
+          type: string
+          format: uuid
+        sendTo:
+          type: string
+          format: email
+
+    InviteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        communityId:
+          type: string
+          format: uuid
+        sendTo:
+          type: string
+          format: email
+        status:
+          enum:
+            - ACCEPT
+            - REJECT

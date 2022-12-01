@@ -1,0 +1,39 @@
+logging:
+  level:
+    org.springframework.web: DEBUG
+    com.lucenyo.neighbour: DEBUG
+    net.devh.boot.grpc.client: DEBUG
+    org.springframework.data: DEBUG
+    org.springframework.data.couchbase.repository.query: DEBUG
+
+#management:
+#  endpoints.web.exposure.include: "*"
+#  metrics.export.prometheus.enabled: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /@project.artifactId@/api
+
+spring:
+  application:
+    name: @project.artifactId@
+
+  servlet:
+    multipart:
+      max-request-size: 20MB
+      max-file-size: 20MB
+
+  couchbase:
+    connection-string: couchbase://127.0.0.1
+    username: Administrator
+    password: 12345678
+  data:
+    couchbase:
+      bucket-name: neighbour
+
+grpc:
+  client:
+    notification-email-client:
+      address: static://localhost:9090
+      negotiation-type: plaintext

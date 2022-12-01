@@ -1,0 +1,178 @@
+openapi: 3.0.3
+info:
+  title: Neighbour People API
+  description: |-
+    Api managenment people
+  version: v1
+servers:
+  - url: http://localhost:8080/v1
+tags:
+  - name: People
+    description: Person API
+paths:
+
+  /people:
+
+    get:
+      tags:
+        - People
+      summary: Get a people by filters
+      operationId: findByFilter
+      parameters:
+        - in: query
+          name: filter
+          required: true
+          schema:
+            $ref: '#/components/schemas/PersonFilterRequest'
+      responses:
+        '200':
+          description: Return people list match filters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonResponse'
+
+    post:
+      tags:
+        - People
+      summary: Create People
+      operationId: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonRequest'
+      responses:
+        '201':
+          description: Successful operation
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+                format: url
+
+    put:
+      tags:
+        - People
+      summary: Update people
+      operationId: update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Id of the people update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonResponse'
+      responses:
+        '204':
+          description: Successful operation
+
+  /people/{id}:
+
+    get:
+      tags:
+        - People
+      summary: Get a people by id
+      operationId: findById
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Id of the people to get
+      responses:
+        '200':
+          description: Return person of id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonResponse'
+
+    delete:
+      tags:
+        - People
+      summary: Delete people
+      operationId: delete
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: UUID of the people to delete
+      responses:
+        '204':
+          description: Successful operation
+
+  /people/{id}/avatar:
+
+    post:
+      tags:
+        - People
+      summary: Upload image from people
+      operationId: uploadAvatar
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: UUID of the people
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                imageFile:
+                  type: string
+                  format: binary
+      responses:
+        '204':
+          description: Successful operation
+
+components:
+  schemas:
+
+    PersonFilterRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+
+    PersonResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        imageUrl:
+          type: string
+
+    PersonRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string

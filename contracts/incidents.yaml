@@ -1,0 +1,160 @@
+openapi: 3.0.3
+info:
+  title: Neighbour Incidents API
+  description: |-
+    Api managenment incidents
+  version: v1
+servers:
+- url: http://localhost:8080/v1
+paths:
+
+  /incidents/{id}:
+
+    get:
+      tags:
+      - Incidents
+      summary: Find incident by Id
+      operationId: findById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentResponse'
+    put:
+      tags:
+      - Incidents
+      summary: Update incident
+      operationId: update
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentRequest'
+      responses:
+        "204":
+          description: No Content
+
+    delete:
+      tags:
+      - Incidents
+      summary: Delete incident
+      operationId: delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: No Content
+
+  /incidents:
+
+    get:
+      tags:
+      - Incidents
+      summary: List of incidents
+      operationId: find
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IncidentResponse'
+    post:
+      tags:
+      - Incidents
+      summary: Create Incident
+      operationId: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentRequest'
+      responses:
+        "201":
+          description: Created
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+                format: url
+
+components:
+  schemas:
+
+
+
+    IncidentRequest:
+      type: object
+      properties:
+        description:
+          type: string
+        categoryId:
+          type: string
+          format: uuid
+        priority:
+          type: string
+          enum:
+          - HIGH
+          - MEDIUM
+          - LOW
+        status:
+          type: string
+          enum:
+          - PENDING
+          - APPROVED
+          - IN_PROGRESS
+          - COMPLETED
+
+    IncidentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        categoryId:
+          type: string
+          format: uuid
+        priority:
+          type: string
+          enum:
+          - HIGH
+          - MEDIUM
+          - LOW
+        status:
+          type: string
+          enum:
+          - PENDING
+          - APPROVED
+          - IN_PROGRESS
+          - COMPLETED
+        createDate:
+          type: string
+          format: date-time
