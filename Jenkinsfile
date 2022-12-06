@@ -1,7 +1,5 @@
 pipeline {
 
-  agent { docker { image 'maven:3.8-openjdk-18' } }
-
   tools {
       maven 'maven3.8'
   }
