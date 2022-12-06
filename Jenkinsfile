@@ -1,25 +1,29 @@
 pipeline {
 
-  agent {
-      docker { image 'maven:3.8-openjdk-18' }
+  agent { docker { image 'maven:3.8-openjdk-18' } }
+
+  tools {
+      maven 'maven3.8'
   }
 
   stages {
 
-    stage("Clone the project") {
-      git branch: 'master', url: 'https://github.com/jalucenyo/neighbour-api.git'
-    }
-
     stage("Compile") {
-      sh "./mvnw clean install -DskipTests"
+      steps ("Running tests") {
+        sh "mvn clean install -DskipTests"
+      }
     }
 
     stage("Tests") {
       steps ("Running tests") {
-        sh "./mvnw test "
+        sh "mvn test "
       }
     }
 
   }
 
 }
+
+
+
+
