@@ -21,7 +21,7 @@ pipeline {
     stage("Compile") {
       steps ("Running tests") {
         container('openjdk') {
-          sh "mvn clean compile install -DskipTests"
+          sh "mvn clean compile package -DskipTests"
         }
       }
     }
