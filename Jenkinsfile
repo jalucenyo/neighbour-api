@@ -1,9 +1,19 @@
 pipeline {
 
-  agent any
-
-  tools {
-      maven 'maven3.8'
+  agent {
+    kubernetes {
+      yaml '''
+        apiVersion: v1
+        kind: Pod
+        spec:
+          containers:
+          - name: openjdk
+            image: maven:3.8-openjdk-18
+            command:
+            - cat
+            tty: true
+        '''
+    }
   }
 
   stages {
