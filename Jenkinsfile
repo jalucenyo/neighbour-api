@@ -17,8 +17,23 @@ pipeline {
 
           - name: couchbase
             image: couchbase:community-6.5.0
-            tty: true
-
+            env:
+              - name: NODE_TYPE
+                value: DEFAULT
+              - name: CLUSTER_USERNAME
+                value: Administrator
+              - name: CLUSTER_PASSWORD
+                value: 12345678
+              - name: CLUSTER_NAME
+                value: Testing
+              - name: SERVICES
+                value: data,index,query,fts
+              - name: CLUSTER_RAMSIZE
+                value: 256
+              - name: BUCKET
+                value: test
+              - name: BUCKET_RAMSIZE
+                value: 128
         '''
     }
   }

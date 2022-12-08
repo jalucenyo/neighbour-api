@@ -9,14 +9,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.security.access.SecurityConfig
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.servlet.MockMvc
@@ -40,11 +38,10 @@ abstract class DatabaseBaseTest {
   protected lateinit var context: WebApplicationContext
   @Autowired
   protected lateinit var objectMapper: ObjectMapper
-
-  protected lateinit var mockMvc: MockMvc
-
   @Autowired
   protected lateinit var personRepository: PersonRepository
+
+  protected lateinit var mockMvc: MockMvc
 
 
   @BeforeEach
@@ -56,45 +53,30 @@ abstract class DatabaseBaseTest {
 
   }
 
-  companion object {
-
-    @Container
-    val container = CouchbaseContainer(DockerImageName.parse("couchbase/server")).apply {
-      withCredentials("Administrator", "12345678")
-      withBucket(BucketDefinition("testbucket"))
-      start()
-    }
-
-    @JvmStatic
-    @DynamicPropertySource
-    fun properties(registry: DynamicPropertyRegistry) {
-      registry.add("spring.couchbase.connection-string") { container.connectionString }
-      registry.add("spring.couchbase.username") { container.username }
-      registry.add("spring.couchbase.password") { container.password }
-      registry.add("spring.data.couchbase.bucket-name"){ "testbucket" }
-    }
-
-//    val container = PostgreSQLContainer(DockerImageName.parse("postgres:12")).apply {
-//      withDatabaseName("neighbour")
-//      withUsername("postgres")
-//      withPassword("postgres")
+//  companion object {
+//
+//    @Container
+//    val container = CouchbaseContainer(DockerImageName.parse("couchbase/server")).apply {
+//      withCredentials("Administrator", "12345678")
+//      withBucket(BucketDefinition("testbucket"))
 //      start()
 //    }
-
+//
 //    @JvmStatic
 //    @DynamicPropertySource
 //    fun properties(registry: DynamicPropertyRegistry) {
-//      registry.add("spring.datasource.url", container::getJdbcUrl);
-//      registry.add("spring.datasource.password", container::getPassword);
-//      registry.add("spring.datasource.username", container::getUsername);
+//      registry.add("spring.couchbase.connection-string") { container.connectionString }
+//      registry.add("spring.couchbase.username") { container.username }
+//      registry.add("spring.couchbase.password") { container.password }
+//      registry.add("spring.data.couchbase.bucket-name"){ "testbucket" }
 //    }
-
-  }
-
-  @Test
-  fun `container database is running`(){
-    Assertions.assertTrue(container.isRunning);
-  }
+//
+//  }
+//
+//  @Test
+//  fun `container database is running`(){
+//    Assertions.assertTrue(container.isRunning);
+//  }
 
   fun registerUser(): Pair<String, OAuth2User> {
 
@@ -116,10 +98,6 @@ abstract class DatabaseBaseTest {
     ))
 
     return Pair(id.toString(), userOauth)
-  }
-
-  protected fun readFile(name: String): String {
-    return ResourceUtils.getFile(javaClass.classLoader.getResource(name)!!).readText()
   }
 
   protected fun toJsonString(obj: Any): String {
