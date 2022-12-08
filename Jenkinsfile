@@ -20,13 +20,17 @@ pipeline {
 
     stage("Compile") {
       steps ("Running tests") {
-        sh "mvn clean compile install -DskipTests"
+        container('openjdk') {
+          sh "mvn clean compile install -DskipTests"
+        }
       }
     }
 
     stage("Tests") {
       steps ("Running tests") {
-        sh "mvn test "
+        container('openjdk') {
+          sh "mvn test"
+        }
       }
     }
 
